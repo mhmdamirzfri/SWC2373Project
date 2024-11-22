@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Details</title>
+    <script src="https://unpkg.com/@daily-co/daily-js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Room Details</h1>
+    <p><strong>Room ID:</strong> <span id="room-id"></span></p>
+    <p><strong>Invite Link:</strong> <span id="room-url"></span></p>
+    <button id="join-call">Join Call</button>
+
+    <script>
+        // Get room details from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const roomUrl = urlParams.get('room_url');
+        const roomId = urlParams.get('room_id');
+        const userName = urlParams.get('user_name') || 'Guest';
+
+        // Display room details
+        document.getElementById('room-id').textContent = roomId;
+        document.getElementById('room-url').textContent = roomUrl;
+        document.getElementById('room-url').href = roomUrl;
+
+        // Redirect to the Daily.co room when the button is clicked
+        document.getElementById('join-call').addEventListener('click', () => {
+            if (!roomUrl) {
+                alert('Room URL is missing.');
+                return;
+            }
+
+            // Redirect to the Daily.co room URL
+            window.location.href = `https://smartmeet.daily.co/${roomId}`;  // Use your specific room ID
+        });
+    </script>
+</body>
+</html>
+

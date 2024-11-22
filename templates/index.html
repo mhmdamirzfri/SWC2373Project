@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conferencing App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://unpkg.com/@daily-co/daily-js"></script>
+</head>
+<body>
+    <header>
+        <h1>SmartMeet</h1>
+    </header>
+
+    <!-- Create Room Section -->
+    <div>
+        <h2>Create a Room</h2>
+        <button id="create-room">Create Room</button>
+    </div>
+
+    <!-- Join Room Section -->
+    <div>
+        <h2>Join an Existing Room</h2>
+        <form id="join-room-form">
+            <input type="text" id="user-name" placeholder="Enter your name" required>
+            <input type="text" id="room-id" placeholder="Enter room ID" required>
+            <button type="submit">Join Room</button>
+        </form>
+    </div>
+
+    <script>
+        // Handle room creation
+        document.getElementById('create-room').addEventListener('click', async () => {
+            const response = await fetch('/create-room', { method: 'POST' });
+            const data = await response.json();
+            if (data.error) {
+                alert('Error creating room');
+            } else {
+                window.location.href = data.redirect_url;  // Redirect to rooms.html
+            }
+        });
+
+        // Handle joining a room
+        document.getElementById('join-room-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const userName = document.getElementById('user-name').value;
+            const roomId = document.getElementById('room-id').value;
+
+            const response = await fetch('/join-room', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ room_id: roomId, user_name: userName })
+            });
+
+            const data = await response.json();
+            if (data.error) {
+                alert('Error joining room');
+            } else {
+                window.location.href = data.redirect_url;  // Redirect to rooms.html
+            }
+        });
+    </script>
+</body>
+</html>
+
